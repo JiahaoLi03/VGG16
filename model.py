@@ -62,6 +62,20 @@ class VGG16(nn.Module):
         )
 
 
+        for m in self.modules():
+            # 卷积层权重初始化
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight,nonlinearity='relu')
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0)
+
+            # 全连接层权重初始化
+            elif isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight, 0, 0.01)
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0)
+
+
     def forward(self, x):
         x = self.block1(x)
         x = self.block2(x)
